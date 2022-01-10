@@ -1,0 +1,81 @@
+On crée un acteur par acteur vouli (par exemple, Alice et Bob). Pour chacun, on a un état inital, on peut set up un état final etc... On relie par transitions (flèche en haut). On peut clic gauche pour éditer le nom des états.
+Clic gauche sur les transition permet de mettre à jour les variables déclarées (ex: les flags) dans la section "Mise a Jour". La section "Garde" sert à mettre des conditions de lock sur l'état.
+On les déclare ensuite dans le "Composition du système".
+On peut changer les états en clique gauche dessus et tout mettre en "Urgent" pour ne plus rien avoir en temporisé.
+Tant qu'on ne fait pas de temps, il FAUT mettre "Urgent" partout.
+
+Avec l'onglet simulateur, on peut avoir le déroulé, et l'onglet Vérificateur permet de vérifier si des conditions sont remplies. par exeple, si on a un état CS pour alice et un autre pour bob: "A[] not(alice.CS and bob.CS)" vérifie qu'on ne peut pas avoir les deux états actifs en même temps.
+A[] -> on veut que ça soit le cas pour TOUS les états.
+A<> -> on veut que ça soit éventuellement possible sur tous les chemins
+
+E<> alice.cs -> Il existe au moins un chemin pour lequel on peut atteindre cet état.
+
+Evaluation: sur la présence, et si ça se passe mal, pas de points bonus si pas là. Eval sur le sujet suivant: passage à niveau, 1 ou 2 scéances dessus, rendre les avancements à la fin des scéances, plus un petit peu plus de temps au cas où. Eval sur UPPAAL.
+
+AnB_sync_base:
+Il y a deux chans de synchro. En éditant l'arc, on peut éditer le champ "synchro" avec "aliceGoIn!" sur l'arc Wait -> CS d'alice, car elle envoie le message de synchro.
+De même pour Bob, une synchro "aliceGoIn?" quelque part, car il fait une requete de synchro.
+Bob ne peut donc pas bouger au début, car il doit synchro avec Alice au début. Le chan "?" ne pourra bouger que si l'autre automate envoie "!".
+Avoir aliceGoIn? qui boucle sur l'état bob.Wait veut dire que Alice peut aller en CS et Bob restera en Wait. C'est l'équivalent chevaleresque, Bob est galant.
+Il faut alors faire sur bob.Wait -> bob.CS un écrit de bobGoIn!, et un bobGoIn? qui boucle sur alice.Idle. On a donc tout vérifié sauf bob.wait -> bob.CS car bob est galant, c'est normal, il peut être en famine.
+
+AnB_timed_base:
+Dans les déclarations, on a une variable qui dit si la CS est occupée par qlqun, et deux horloges A et B. Alice consulte l'horloge A, et Bob la B.
+On peut maintenant éditer les places avec des invariants, par exemple, a ne peut pas dépasser 1, et sur les arcs, des gardes, et des MaJ des horloges. Quand on est dans un état, l'horloge peut avancer.
+On veut forcer Alice et Bob a ne rester qu'une unitée de temps en CS, et attendre 2 états de temps avant de retourner en wait.
+Les horloges sont le temps continu, ça marche donc sur interval, avec des remises a zéro, et des blocages au niveau des places.
+Il faut donc tout le temps reset les horloges. Si on veut qu'un état reste un tick de temps a une place, on met donc a := 0 en maj de l'arc d'entrée, et a <= 1 en invariant de la place
+Si on met un chan seul, on a un dealock. Il FAUT qu'il se synchronise avec autre chose.
+
+Automate qui recoit open et envoie le signal pour close, et inversement.
+
+Alice et bob AnB_timed_final, dans le champ commentaires, ajouter ce que les propriétés du vérificateur veulent dire.
+
+PaN: Question 4, PT8 pas vérifiée. En train de faire la question 6.
+
+Semaine prochaine: evaluation. On aura un sujet tout neuf. Il y aura la durée du TP pour le faire. Faisable si just fini et compris Alice et Bob. Normalement sans synchro/tempo, mais ça fera des points en plus. Cette semaine et la semaine prochaine, mettre le nom dans le titre du fichier.
+
+
+
+
+Rendu: 
+-lift_starting_point.xml (Partie 1)
+-lift.q (partie 2 et plus)
+-lift_strategy.xml (Partie 3)
+-lift_extended.xml (Partie 4)
+
+Quand le bouton est appuyé, il le reste jusqu'à ce que la porte se ferme
+Les boutons sont relachés lorsque la porte se ferme!!
+
+Env: Si un bouton n'est pas appuyé, on peut l'activer.
+i : int[0,4] -> on prend un int entre 0 ou 4 inclus
+
+Patron Door et Lift incomplets
+Pour la P1, il faut faire un patron non deterministe
+Part 2: P1 et P2 passent, P3 à P5 ne marcheront pas tout de suite, ça sera le but de la partie 3.
+Part 3: Proposer une stratégie de controle qui répond aux propriétés de la partie 2. La P5 sera la plus dur a respecter.
+Si ça ne marche pas, et qu'on a une bonne stratégie, et une bonne explication de pourquoi ça ne marche pas, presque autant de points.
+
+Le i[0,4] n'est pas faisable avec un forall, il faudra par exemple faire 5 fois la même, c/c donc.
+
+Les boutons interieur/exterieur se comportent pareil.
+Part 4: Plus simple: proposer une autre stratégie que la partie 3, et la commenter.
+
+Patron Env: environement du systeme qui gerre les boutons. False = bouton pas appuyé. Quand un bouton est appuyé: passe a Vrai.
+Si not btn[i], alors le bouton a cet indice = true. Il doit repasser a faux quand la porte se ferme
+
+Configuration initiale du système: Aucun bouton n'est appyué, on est a l'étage 0, la porte est fermée et le moteur est éteint.
+Si on appuis sur aucun bouton, rien ne se passe.
+Si un bouton est appuyé, il faut appuyé sur plusieurs boutons (?), a partir qu'un bouton est appuyé, la seule transition possible est que l'assenceur commence à bouger. Si des boutons sont appuyés, il peut aller quelque part, appuyer sur un bouton ne le force pas a bouger tout de suite
+
+La partie non deterministe n'a pas a regarder le bouton, mais met un boolean a vrai. Les transition qui sortent d'un état pour bouger va regarder si au moins un bouton est a vrai. D'ici il faudra faire la strategie de contrôle. On va revenir a l'état de départ, et soir un boucle, soit on reste à l'état de d"part si aucun bouton n'est a vrai.
+
+
+
+Partie 2: P6 (E[] not currentFloor == 4) n'est pas validée car elle implique que nous avons potentiellement TOUJOURS un currentFloor différent de 4. Or, nous pouvons nous rendre à l'étage 4, elle n'est donc pas vérifiée lorsque nous appuyonssur btn[4] et nous rendons à l'étage 4.
+
+Partie 3: En stratégie, j'ai adopté une variable globale de mémoire de l'étage choisi. Lorsqu'un bouton est appuyé, on déselectionne les boutons précédents, et le dernier bouton appuyé est considéré comme l'étage choisi. Le patern lift compare ensuite cet étage choisi à l'étage actuel, et choisit goUp ou goDown selon. Une fois qu'il a atteint cet étage (currentFloor == goalFloor), alors il coupe le moteur de l'ascenseur, et autorise l'ouverture et la fermeture de la porte.
+Mettre de manière cyclique l'allumage/coupure du moteur puis l'ouverture fermeture de la porte permet déviter qu'on aie une porte ouverte alors que le moteur est allumé.
+L'inconveignant de cette mise en place est qu'il est impossible de "queue" des boutons, on ne peut en avoir qu'un seul enclanché à la fois. On pourrai changer cela en tranformant foalFloor en pile FIFO à laquelle on pourrai ajouter les boutons dans l'ordre d'arrivé.
+
+Partie 4: Pour la stratégie alternative, puisque notre controleur a une place "centrale", le fait de donner deux chemins, soit l'allumage du moteur, le voyage jusqu'à l'étage choisi, et son éteignage, ou bien le chemin d'ouverture/fermeture des portes, rend équivalent à son cycle. Il est cependant maintenant possible d'ouvrir et fermer les portes à l'infini, ce qui peut provoquer une famine du chemin de voyage. Il est possible de contrecarrer cela en faisant le check d'étage dans le controleur plutot que le lift. Cela permettra également d'économiser l'allumage du moteur si l'étage sélectionné est l'étage courrant.

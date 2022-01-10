@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>// déclaration des tours
+// int TURN_ALICE = 0;
+// int TURN_BOB = 1;
+// int turn = TURN_ALICE;
+
+bool flagAlice = false;
+bool flagBob = false;
+</declaration><template><name x="5" y="5">Alice</name><declaration>// Place local declarations here.
+</declaration><location id="id0" x="-704" y="-312"><name x="-714" y="-342">Wait</name><urgent/></location><location id="id1" x="-632" y="-400"><name x="-642" y="-430">CS</name><urgent/></location><location id="id2" x="-784" y="-400"><urgent/></location><init ref="id2"/><transition><source ref="id1"/><target ref="id2"/><label kind="assignment" x="-744" y="-496">flagAlice = false</label><nail x="-704" y="-472"/></transition><transition><source ref="id0"/><target ref="id1"/><label kind="guard" x="-632" y="-336">not (flagBob == true)</label><nail x="-624" y="-336"/></transition><transition><source ref="id2"/><target ref="id0"/><label kind="assignment" x="-888" y="-344">flagAlice = true</label><nail x="-812" y="-340"/></transition></template><template><name>Bob</name><location id="id3" x="-472" y="-192"><name x="-480" y="-168">R</name><urgent/></location><location id="id4" x="-704" y="-272"><name x="-714" y="-302">Wait</name><urgent/></location><location id="id5" x="-616" y="-344"><name x="-626" y="-374">CS</name><urgent/></location><location id="id6" x="-792" y="-344"><urgent/></location><init ref="id6"/><transition><source ref="id3"/><target ref="id5"/><label kind="guard" x="-448" y="-296">flagAlice == false</label><label kind="assignment" x="-448" y="-272">flagBob = true</label><nail x="-472" y="-336"/></transition><transition><source ref="id4"/><target ref="id3"/><label kind="guard" x="-672" y="-224">flagAlice == true</label><label kind="assignment" x="-640" y="-192">flagBob = false</label></transition><transition><source ref="id5"/><target ref="id6"/><label kind="assignment" x="-752" y="-448">flagBob = false</label><nail x="-704" y="-416"/></transition><transition><source ref="id4"/><target ref="id5"/><label kind="guard" x="-656" y="-304">not (flagAlice == true)</label><nail x="-624" y="-296"/></transition><transition><source ref="id6"/><target ref="id4"/><label kind="assignment" x="-896" y="-280">flagBob = true</label><nail x="-792" y="-272"/></transition></template><system>alice = Alice();
+bob = Bob();
+
+system alice, bob;</system></nta>

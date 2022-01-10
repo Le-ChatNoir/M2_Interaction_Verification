@@ -1,0 +1,19 @@
+Exercice: Préparer les spécifications le plus précis possible, (acteurs, spécifications, interactions, hypothèse etc…) d’un entre deux sujets:
+    • Vote électronique de type Condorcet (classer les candidats préférés etc…)
+    • Enchères de Vickrey (2eme plus haute enchère gagne)
+Faire les identification des rôles, des interfaces, des contrats, les expressions des propriétés…
+1 à 4 (possible de faire plus) pages commentées (diagrammes et textes d’explication), à rendre avant le 30 novembre grand max. Mieux d’ici 2 semaines (17/18 nov)
+Passer en revue toutes les spécificités
+Roles → interfaces → signatures, preconditions, postconditions…
+
+//////////////////////
+
+2 ; 5, 6 → Interaction et communication
+2 ; 7 → Critères de classification
+2 ; 8 → Types de communication
+
+Il faudra une diffusion asynchrone (par exemple par UDP, attention aux pertes, méthode peu fiable) pour rendre compte a la liste de tous les clients. Les clients sont considérés comme ne pouvant pas être malicieux. Les canaux de communication sont considérés comme fiables (PL pour Perfect Links), et les canaux sont en FIFO. Abstraction de diffusion de type Total Reliable Broadcast → Reliable broadcast avec même ordre de réception → assure que tous les clients recevront le résultat des élections après le calcul.
+2 ; 41 → Consensus Integrity (Chaque acteur choisit une fois au plus)
+3 ; 8 → Interaction abstraite de Vote
+
+////////////////////
